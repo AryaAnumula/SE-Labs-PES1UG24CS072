@@ -32,7 +32,8 @@ def parse_salary_rule(rule):
 def add_applicant(name, role, expected_salary, status="applied"):
     """Insert a new applicant into the database."""
     conn.execute(
-        "INSERT INTO applicants (name, role, expected_salary, status) VALUES (?, ?, ?, ?)",
+        "INSERT INTO applicants (name, role, expected_salary, status) "
+        "VALUES (?, ?, ?, ?)",
         (name, role, expected_salary, status),
     )
     conn.commit()
@@ -58,6 +59,7 @@ def update_status(applicant_id, status):
     except sqlite3.Error:
         logging.exception("Could not update applicant %s", applicant_id)
 
+
 def export_report(path):
     """Write name, role and status of every applicant to a CSV file."""
     rows = conn.execute("SELECT name, role, status FROM applicants")
@@ -67,7 +69,8 @@ def export_report(path):
 
 def count_by_status(status):
     """Count applicants with the given status."""
-    return conn.execute("SELECT COUNT(*) FROM applicants WHERE status = ?", (status,)).fetchone()[0]
+    query = "SELECT COUNT(*) FROM applicants WHERE status = ?"
+    return conn.execute(query, (status,)).fetchone()[0]
 
 
 def main():
