@@ -1,5 +1,25 @@
 files/L5_14_recruitment_tracker/
 applicants_report.csv
 
+# Reference material and upstream checkouts (not lab submissions).
+/files/
+/L6_L7_14_library_fines/
+
+# Local Python environments, test caches, and coverage artifacts.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Lab 7 screenshots and execution logs are for the consolidated PDF.
+/Lab-07/screenshots/
+/Lab-07/evidence/
+
 L5_14_recruitment_tracker/
 applicants_report.csv
