@@ -17,8 +17,7 @@ __pycache__/
 htmlcov/
 coverage.xml
 
-# Lab 7 screenshots and execution logs are for the consolidated PDF.
-/Lab-07/screenshots/
+# Local Lab 7 replay copies and execution logs (screenshots are submitted).
 /Lab-07/evidence/
 
 L5_14_recruitment_tracker/

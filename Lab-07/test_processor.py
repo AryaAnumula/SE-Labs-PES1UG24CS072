@@ -2,7 +2,7 @@
 
 Malformed member IDs and day lists should return None. Missing/blank titles
 should return an empty code; a one-word title should use its first initial.
-The original application intentionally fails these robustness properties.
+These properties expose failures in the original application and verify fixes.
 """
 
 import string
@@ -25,6 +25,9 @@ NON_TEXT = st.one_of(
 
 
 @given(st.text() | st.none())
+@example(None)
+@example("")
+@example("STU-" + "9" * 5000)
 def test_parse_member_id_no_crash(value):
     """Arbitrary Unicode or None must not cause an unhandled exception."""
     result = parse_member_id(value)
@@ -37,6 +40,9 @@ def test_parse_member_id_no_crash(value):
 
 
 @given(st.text() | st.none())
+@example(None)
+@example("")
+@example("9" * 5000)
 def test_total_fine_no_crash(value):
     """Reject malformed input safely or return a nonnegative integer fine."""
     result = total_fine(value)
@@ -44,6 +50,9 @@ def test_total_fine_no_crash(value):
 
 
 @given(st.text() | st.none())
+@example(None)
+@example("")
+@example("A")
 def test_shelf_code_no_crash(value):
     """Even missing titles must have a safe string result."""
     assert isinstance(shelf_code(value), str)
@@ -82,6 +91,22 @@ def test_parse_member_id_missing_separator(value):
 def test_total_fine_malformed_field(days):
     """Do not silently ignore an invalid field or return a partial fine."""
     assert total_fine(f"{days},invalid") is None
+
+
+@given(
+    prefix=WORDS,
+    suffix=st.sampled_from(["", "-1", "+1", "1.5", "1e3", "1_0", "\u00b2", "12-3"]),
+)
+def test_parse_member_id_invalid_number(prefix, suffix):
+    assert parse_member_id(f"{prefix}-{suffix}") is None
+
+
+@given(
+    days=st.integers(min_value=0, max_value=10**12),
+    invalid=st.sampled_from(["", " ", "-1", "+1", "1.5", "1e3", "1_0", "\u00b2"]),
+)
+def test_total_fine_invalid_numeric_field(days, invalid):
+    assert total_fine(f"{days},{invalid}") is None
 
 
 @given(st.text(alphabet=" \t\n\r\v\f"))
